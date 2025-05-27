@@ -1,0 +1,79 @@
+//Iterative 
+//time exceed
+
+class Solution {
+    private:
+    bool path(TreeNode* root, TreeNode* target, vector<TreeNode*>& resultPath) {
+        if (root == nullptr) return false;
+
+        stack<pair<TreeNode*, vector<TreeNode*>>> st;
+        st.push({root, {root}});
+
+        while (!st.empty()) {
+            auto it = st.top();
+            TreeNode* node = it.first;
+            vector<TreeNode*> pre = it.second;
+            st.pop();
+
+            if (node == target) {
+                resultPath = pre;
+                return true;
+            }
+
+            if (node->left) {
+                vector<TreeNode*> newPath = pre;
+                newPath.push_back(node->left);
+                st.push({node->left, newPath});
+            }
+
+            if (node->right) {
+                vector<TreeNode*> newPath = pre;
+                newPath.push_back(node->right);
+                st.push({node->right, newPath});
+            }
+        }
+
+        return false;
+    }
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        vector<TreeNode*> path1, path2;
+
+        path(root, p, path1);
+        path(root, q, path2);
+        
+        TreeNode* lca = nullptr;
+        int len = min(path1.size(), path2.size());
+        for (int i = 0; i < len; ++i) {
+            if (path1[i] == path2[i]){
+                lca = path1[i];
+            }else {
+                break; // Stop at first mismatch
+            }
+        }
+
+        return lca;
+
+    }
+};
+
+//Recursive
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (!root || root == p || root == q)
+            return root;
+
+        TreeNode* left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+
+        if (left != nullptr && right != nullptr) {
+            return root;
+        } else {
+            if (left != nullptr) {
+                return left;
+            } else {
+                return right;
+            }
+        }
+
+
+    }
