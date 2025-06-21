@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool hasCycle(int u, int parent, vector<vector<int>>& adj, vector<int>& vis) {
+        vis[u] = 1;
+        for (int v : adj[u]) {
+            if (!vis[v]) {
+                if (hasCycle(v, u, adj, vis)) return true;
+            } else if (v != parent) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        vector<vector<int>> adj(n + 1);
+
+        for (auto& edge : edges) {
+            int u = edge[0], v = edge[1];
+
+            // Add edge temporarily
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+
+            // Check for cycle
+            vector<int> vis(n + 1, 0);
+            if (hasCycle(u, -1, adj, vis)) {
+                return edge;  // this is the last edge that creates a cycle
+            }
+        }
+
+        return {};
+    }
+};
+
+
+// last wala edge lgne pr hi loop bnega hr edge jodne ke baad loop check kr rhe h 
