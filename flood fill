@@ -1,0 +1,66 @@
+//BFS
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        int n = image.size();
+        int m = image[0].size();
+        int originalColor = image[sr][sc];
+        if (originalColor == color) return image; // No need to fill
+
+        queue<pair<int, int>> q;
+        q.push({sr, sc});
+        image[sr][sc] = color;
+
+        int drow[] = {-1, 0, 1, 0};
+        int dcol[] = {0, -1, 0, 1};
+
+        while (!q.empty()) {
+            int r = q.front().first;
+            int c = q.front().second;
+            q.pop();
+
+            for (int i = 0; i < 4; ++i) {
+                int nrow = r + drow[i];
+                int ncol = c + dcol[i];
+                if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m &&
+                    image[nrow][ncol] == originalColor) {
+                    q.push({nrow, ncol});
+                    image[nrow][ncol] = color;
+                }
+            }
+        }
+
+        return image;
+    }
+};
+
+//DFS
+class Solution {
+public:
+    vector<vector<int>> dfs(int n,int m,int i, int j,int color,int precol,vector<vector<int>>& vis, vector<vector<int>>& image, int drow[],int dcol[]){
+        vis[i][j]=1;
+        image[i][j]=color;
+
+        for(int k=0;k<4;k++){
+            int nrow=i+drow[k];
+            int ncol=j+dcol[k];
+
+            if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m && !vis[nrow][ncol] && image[nrow][ncol] == precol) {
+                dfs(n, m, nrow, ncol, color, precol, vis, image, drow, dcol);
+            }
+            
+        }
+        return image;
+    }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        int n=image.size();
+        int m=image[0].size();
+        vector<vector<int>> vis(n, vector<int> (m,0));
+        int precol=image[sr][sc];
+
+        int drow[4]={-1,0,1,0};
+        int dcol[4]={0,1,0,-1};
+        
+        return dfs(n,m,sr, sc, color, precol, vis, image, drow,dcol);
+    }
+};
