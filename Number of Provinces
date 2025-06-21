@@ -37,7 +37,7 @@ public:
         }
         return count;
     }
-};
+
 
 //WITHOUT ADJ LIST
 private:
@@ -66,4 +66,3 @@ public:
 
         return count;
     }
-};
