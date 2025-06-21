@@ -1,0 +1,69 @@
+//DFS WITH ADJ LIST
+private:
+    void traversal(int i, vector<vector<int>>& list, vector<int> &vis){
+        vis[i]=1;
+
+        for(auto it :list[i]){
+            if(!vis[it]){
+                traversal(it, list, vis);
+            }
+        }
+    }
+
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int ans;
+        int l=isConnected.size();
+
+        vector<int> vis(l, 0);
+        int count=0;
+
+        vector<vector<int>> list(l);
+
+        for(int i=0;i<l;i++){
+            for(int j=0;j<l;j++){
+                if(isConnected[i][j] == 1 && i!=j){
+                    list[i].push_back(j);
+                    list[j].push_back(i);
+                }
+            }
+        }
+
+        for(int i=0; i<l;i++){
+            if(!vis[i]){
+                traversal(i,list,vis);
+                count++;
+            }
+        }
+        return count;
+    }
+};
+
+//WITHOUT ADJ LIST
+private:
+    void traversal(int i, vector<vector<int>>& isConnected, vector<int> &vis){
+        vis[i] = 1;
+
+        for (int j = 0; j < isConnected.size(); j++) {
+            if (isConnected[i][j] == 1 && !vis[j]) {
+                traversal(j, isConnected, vis);
+            }
+        }
+    }
+
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int l = isConnected.size();
+        vector<int> vis(l, 0);
+        int count = 0;
+
+        for (int i = 0; i < l; i++) {
+            if (!vis[i]) {
+                traversal(i, isConnected, vis);
+                count++;
+            }
+        }
+
+        return count;
+    }
+};
